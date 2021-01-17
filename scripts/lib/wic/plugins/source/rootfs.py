@@ -95,7 +95,16 @@ class RootfsPlugin(SourcePlugin):
 
         part.rootfs_dir = cls.__get_rootfs_dir(rootfs_dir)
         part.has_fstab = os.path.exists(os.path.join(part.rootfs_dir, "etc/fstab"))
-        pseudo_dir = os.path.join(part.rootfs_dir, "../pseudo")
+
+        if 'ROOTFS_DIR' in krootfs_dir:
+            if part.rootfs_dir.startswith(krootfs_dir['ROOTFS_DIR']):
+                pseudo_dir = os.path.join(krootfs_dir['ROOTFS_DIR'], "../pseudo")
+            else:
+                pseudo_dir = os.path.join(part.rootfs_dir, "../pseudo")
+        else:
+            pseudo_dir = os.path.join(part.rootfs_dir, "../pseudo")
+
+
         if not os.path.lexists(pseudo_dir):
             logger.warn("%s folder does not exist. "
                         "Usernames and permissions will be invalid " % pseudo_dir)
