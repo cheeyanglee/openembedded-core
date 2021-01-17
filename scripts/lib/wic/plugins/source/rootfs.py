@@ -200,20 +200,17 @@ class RootfsPlugin(SourcePlugin):
                 if not os.path.lexists(full_path):
                     continue
 
-                if new_pseudo:
-                    pseudo = cls.__get_pseudo(native_sysroot, new_rootfs, new_pseudo)
-                else:
-                    pseudo = None
                 if path.endswith(os.sep):
                     # Delete content only.
                     for entry in os.listdir(full_path):
                         full_entry = os.path.join(full_path, entry)
-                        rm_cmd = "rm -rf %s" % (full_entry)
-                        exec_native_cmd(rm_cmd, native_sysroot, pseudo)
+                        if os.path.isdir(full_entry) and not os.path.islink(full_entry):
+                            shutil.rmtree(full_entry)
+                        else:
+                            os.remove(full_entry)
                 else:
                     # Delete whole directory.
-                    rm_cmd = "rm -rf %s" % (full_path)
-                    exec_native_cmd(rm_cmd, native_sysroot, pseudo)
+                    shutil.rmtree(full_path)
 
             # Update part.has_fstab here as fstab may have been added or
             # removed by the above modifications.
