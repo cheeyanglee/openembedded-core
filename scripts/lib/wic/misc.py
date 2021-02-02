@@ -138,12 +138,9 @@ def exec_native_cmd(cmd_and_args, native_sysroot, pseudo=""):
     if pseudo:
         cmd_and_args = pseudo + cmd_and_args
 
-    hosttools_dir = get_bitbake_var("HOSTTOOLS_DIR")
-
-    native_paths = "%s/sbin:%s/usr/sbin:%s/usr/bin:%s/bin:%s" % \
+    native_paths = "%s/sbin:%s/usr/sbin:%s/usr/bin:%s/bin" % \
                    (native_sysroot, native_sysroot,
-                    native_sysroot, native_sysroot,
-                    hosttools_dir)
+                    native_sysroot, native_sysroot)
 
     native_cmd_and_args = "export PATH=%s:$PATH;%s" % \
                    (native_paths, cmd_and_args)
